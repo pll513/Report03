@@ -1,0 +1,120 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{CJKutf8}
+\setlength{\headheight}{15pt} 
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{times}
+\usepackage{mathptmx}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\geometry{left=3.17cm,right=3.17cm,top=2.54cm,bottom=2.54cm}
+\usepackage{indentfirst}
+\setlength{\parindent}{2em}
+\rhead{Page \thepage{} of \pageref{LastPage}}
+
+
+
+\begin{document}
+\begin{CJK*}{UTF8}{gbsn}
+
+
+
+\section{实验课题}
+下面利用蒙特卡罗方法计算一个冰淇淋的体积和质量.\par
+假设冰淇淋的下部为一锥体而上部为一个半球, 锥面方程为$z^2=x^2+y^2$, 球面方程为$x^2+y^2+(z-1)^2=1$. 完成以下实验:\par 
+\begin{enumerate}
+\item 画出冰淇淋的图形.
+\item 分别用确定性方法和蒙特卡罗方法计算冰淇淋的体积, 比较计算结果.
+\item 假设冰淇淋的密度函数为为$f(x,y,z)=z\exp{[-(x^2+y^2+z^2)]}$, 分别用确定性方法和蒙特卡罗方法计算冰淇淋的质量, 比较计算结果.
+\end{enumerate}
+
+
+
+\section{图形绘制}
+
+\subsection{理论分析}
+
+\subsection{实验过程}
+
+
+
+
+\section{体积计算}
+
+\subsection{理论分析}
+
+\subsection{实验过程}
+
+
+
+
+\section{质量计算}
+
+
+\subsection{理论分析}
+
+\subsection{实验过程}
+
+
+\section{附录}
+\noindent\textbf{Lab03.m} 源代码
+\vspace{-10pt}
+\lstset{basicstyle=\ttfamily\footnotesize,escapechar=`}
+\begin{lstlisting}
+%Lab03.m
+clear;clc;format long;
+syms theta r phi;
+countAll = 1000000;
+countInIceCream = 0;
+S = 0;
+f = @(x,y,z) z*exp(-(x^2+y^2+z^2));
+
+%draw the figure
+z1 = @(x,y) sqrt(x.^2+y.^2);
+figure('name','ice-cream figure');
+g1 = ezmesh(z1,[-1/sqrt(2),1/sqrt(2),-1/sqrt(2),1/sqrt(2)],'circ');
+hold on;
+z2 = @(x,y) sqrt(1-x.^2-y.^2)+1;
+g2 = ezmesh(z2,[-1/sqrt(2),1/sqrt(2),-1/sqrt(2),1/sqrt(2)],'circ');
+title('ice-cream');
+axis equal;
+
+%generate random points
+for i = 1:countAll
+   w = [2*rand(1)-1,2*rand(1)-1,2*rand(1)];
+   if (w(3)^2>w(1)^2+w(2)^2 && w(1)^2+w(2)^2+(w(3)-1)^2<1)
+       countInIceCream = countInIceCream + 1;
+       S = S + f(w(1),w(2),w(3));
+   end
+end
+
+%calculate volume
+V1 = eval(int(int(int(r*r*sin(theta),r,0,2*cos(theta)),...
+    theta,0,pi/4),phi,0,2*pi));
+V2 = 8 * countInIceCream / countAll;
+fprintf('The actual volume of the ice-cream is %.6f.\n\n',V1);
+fprintf('The estimated volume of the ice-cream is %.6f.\n\n',V2);
+
+
+%calculate mass
+M1 = eval(int(int(int(r^3*sin(theta)*cos(theta)*exp(-r^2),...
+    r,0,2*cos(theta)),theta,0,pi/4),phi,0,2*pi));
+M2 = S / countInIceCream * V2;
+fprintf('The actual mass of the ice-cream is %.6f.\n\n',M1);
+fprintf('The estimated mass of the ice-cream is %.6f.\n\n',M2);
+\end{lstlisting}
+
+
+
+
+\end{CJK*}
+\end{document}
