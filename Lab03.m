@@ -7,8 +7,8 @@ S = 0;
 f = @(x,y,z) z*exp(-(x^2+y^2+z^2));
 
 %draw the figure
-z1 = @(x,y) sqrt(x.^2+y.^2);
 figure('name','ice-cream figure');
+z1 = @(x,y) sqrt(x.^2+y.^2);
 g1 = ezmesh(z1,[-1/sqrt(2),1/sqrt(2),-1/sqrt(2),1/sqrt(2)],'circ');
 hold on;
 z2 = @(x,y) sqrt(1-x.^2-y.^2)+1;
